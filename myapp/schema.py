@@ -38,8 +38,31 @@ class CreateVinyl(graphene.Mutation):
         )
 
 
+class DeleteVinyl(graphene.Mutation):
+    id = graphene.Int()
+    song_name = graphene.String()
+    artist = graphene.String()
+    album_name = graphene.String()
+
+    class Arguments:
+        id = graphene.Int()
+
+    def mutate(self, info, id):
+
+        vinyl = VinylModel.objects.get(id=id)
+        vinyl.delete()
+
+        return DeleteVinyl(
+            id=vinyl.id,
+            # url=link.url,
+            # description=link.description,
+        )
+
+
 class Mutation(graphene.ObjectType):
     create_vinyl = CreateVinyl.Field()
+    delete_vinyl = DeleteVinyl.Field()
+
 
 
 schema = graphene.Schema(
